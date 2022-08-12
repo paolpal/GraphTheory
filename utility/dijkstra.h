@@ -10,69 +10,79 @@ using namespace std;
 #ifndef _DIJKSTRA_H
 #define _DIJKSTRA_H
 
-struct dNode : sComparable<int>{
-  int dist;
+// pred - predecessore deve essere int
+// aggiungi uncampo label
+
+template <class L = int, class T = int>
+struct dNode : sComparable<T>{
+  T dist;
+  L label;
   int pred;
   int nodeNumber;
   int heapIndex;
 
-  dNode():sComparable<int>(dist){}
+  dNode():sComparable<T>(dist){}
 
-  dNode(int n, int d, int p):sComparable<int>(dist){
+  dNode(int n, T d, int p):sComparable<T>(dist){
     dist = d;
     pred = p;
     nodeNumber = n;
   }
 
-  dNode& operator=(const dNode& s){
+  dNode& operator=(const dNode<L,T>& s){
     dist = s.dist;
     nodeNumber = s.nodeNumber;
     pred = s.pred;
     return *this;
   }
 
-  bool operator==(dNode& c){
+  bool operator==(dNode<L,T>& c){
     return nodeNumber==c.nodeNumber;
   }
 };
 
-ostream& operator<<(ostream& os, const dNode& n){
-  os << "Nodo: " << n.nodeNumber << " Distanza: " << n.dist << " Predecessore: " << n.pred;
+template <class L, class T>
+ostream& operator<<(ostream& os, const dNode<L,T>& n){
+  os << "Nodo: " << n.nodeNumber << " Distanza: " << n.dist << " Predecessore: " << n.pred << " Label: " << n.label;
   return os;
 }
 
-
+template <class L = int, class T = int>
 class Dijkstra{
-  Graph<char,int> *G;
+  Graph<L,T> *G;
   bool *inS;
-  DijkstraHeap<dNode> *Q;
+  DijkstraHeap< dNode<L,T> > *Q;
   int nodes;
 
 public:
-  Dijkstra(Graph<char,int> &G){
+  Dijkstra(Graph<L,T> &G){
     this->G = &G;
     nodes = G.getNodes();
 
-    Q = new DijkstraHeap<dNode>(nodes);
+    Q = new DijkstraHeap< dNode<L,T> >(nodes);
     inS = new bool[nodes];
 
     for(int i=0; i<nodes; i++){
       inS[i] = false;
-      Q->insert(dNode(i,INT_MAX,-1));
+      //Q->insert(dNode<L,T>(i,INT_MAX,-1));
+      Q->insert(dNode<L,T>(i,numeric_limits<T>::max(),-1));
     }
   }
 
   void start(int node){
     Q->extract(node);
-    Q->insert(dNode(node,0,0));
+    Q->insert(dNode<L,T>(node,0,0));
 
-    dNode nodo1, nodo2;
+    dNode<L,T> nodo1, nodo2;
     int j;
+
+    Node<T> *l;
     for(int i=0; i<nodes; i++){
       nodo1 = Q->extract();
       inS[nodo1.nodeNumber] = true;
       cout << nodo1 << endl;
-      Graph<char,int>::Node<int>* l = G->getList(nodo1.nodeNumber);
+      //Graph<L,T>::Node* l = G->getList(nodo1.nodeNumber);
+      l = G->getList(nodo1.nodeNumber);
       while(l!=NULL){
         j = l->nodeNumber;
         if(!inS[j]){

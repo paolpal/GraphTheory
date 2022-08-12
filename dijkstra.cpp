@@ -2,10 +2,10 @@
 #include <limits>
 using namespace std;
 
-#include "../utility/comparable.h"
-#include "../utility/heap.h"
-#include "../utility/dijkstraHeap.h"
-#include "../utility/graph.h"
+#include "utility/comparable.h"
+#include "utility/heap.h"
+#include "utility/dijkstraHeap.h"
+#include "utility/graph.h"
 
 #define N 6
 

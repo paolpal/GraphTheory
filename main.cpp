@@ -17,14 +17,14 @@ int main(int argc, char const *argv[]) {
 
   cin >> n >> r;
 
-  Graph<char,int> G(n);
+  Graph<int,int> G(n);
 
   for(int i=0; i<r; i++){
     cin >> n1 >> n2 >> c;
     G.addArc(n1,n2,c);
   }
 
-  Dijkstra D1(G);
+  Dijkstra<int,int> D1(G);
   //Dijkstra D2(G);
 
   D1.start(5);

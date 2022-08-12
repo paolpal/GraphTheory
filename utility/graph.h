@@ -1,24 +1,23 @@
 #ifndef _GRAPH_H
 #define _GRAPH_H
 
+template<class ArcType>
+struct Node{
+  int nodeNumber;
+  ArcType arcLabel;
+
+  Node* next;
+
+  Node(int n, ArcType l):nodeNumber(n),arcLabel(l),next(NULL){}
+};
+
 template<class NodeType, class ArcType = double>
 class Graph{
-
-public:
-  template<class _ArcType = ArcType>
-  struct Node{
-    int nodeNumber;
-    _ArcType arcLabel;
-
-    Node<>* next;
-
-    Node<>(int n, _ArcType l):nodeNumber(n),arcLabel(l),next(NULL){}
-  };
 
 private:
   int nodes;
 
-  Node<>** graph;
+  Node<ArcType>** graph;
   NodeType* labels;
 
   bool* mark;
@@ -26,7 +25,7 @@ private:
   void nodeVisit(int i){
     mark[i]=1;
 
-    Node<>* g;
+    Node<ArcType>* g;
     int j;
     for(g=graph[i]; g!=NULL; g=g->next){
       j = g->nodeNumber;
@@ -34,13 +33,13 @@ private:
     }
   }
 
-  void insert(Node<>*& l, int end, ArcType price){
+  void insert(Node<ArcType>*& l, int end, ArcType price){
     if(l==NULL){
-      l = new Node<>(end,price);
+      l = new Node<ArcType>(end,price);
       return;
     }
     if(end<l->nodeNumber){
-      Node<>* tmp = new Node<>(end,price);
+      Node<ArcType>* tmp = new Node<ArcType>(end,price);
       tmp->next = l;
       l = tmp;
       return;
@@ -52,7 +51,7 @@ public:
 
   Graph(int nodes){
     this->nodes = nodes;
-    graph = new Node<>* [nodes];
+    graph = new Node<ArcType>* [nodes];
     for(int i=0; i<nodes; i++) graph[i] = NULL;
     labels = new NodeType[nodes];
     mark = new bool[nodes];
@@ -63,7 +62,7 @@ public:
   }
 
   void addArc(int start, int end, ArcType price = 0){
-    Node<>* tmp = new Node<>(end, price);
+    Node<ArcType>* tmp = new Node<ArcType>(end, price);
     //tmp->nodeNumber = end;
     //tmp->arcLabel = price;
     tmp->next = graph[start];
@@ -75,7 +74,7 @@ public:
     labels[node] = label;
   }
 
-  Node<>* getList(int listIndex){
+  Node<ArcType>* getList(int listIndex){
     return graph[listIndex];
   }
 
